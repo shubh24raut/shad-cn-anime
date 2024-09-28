@@ -20,7 +20,7 @@ type Props = {
 const HomePage = () => {
   const PAGE_SIZE = 12;
 
-  const [animeList, setAnimeList] = useState([]);
+  const [animeList, setAnimeList] = useState<Anime[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ const HomePage = () => {
 
   const renderPageNumbers = () => {
     const pages = [];
-    const totalDisplay = 5; // Number of page links to show around the current page
+    const totalDisplay = 3; // Number of page links to show around the current page
 
     // Determine the start and end page for the pagination
     let startPage = Math.max(1, currentPage - Math.floor(totalDisplay / 2));
@@ -115,29 +115,47 @@ const HomePage = () => {
           </div>
         )}
       </div>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              href="#"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            />
-          </PaginationItem>
+      <div className="p-4">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  if (currentPage === 1) {
+                    e.preventDefault(); // Prevent action if already on the first page
+                  } else {
+                    setCurrentPage((prev) => Math.max(prev - 1, 1));
+                  }
+                }}
+                className={
+                  currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+                }
+              />
+            </PaginationItem>
 
-          {renderPageNumbers()}
+            {renderPageNumbers()}
 
-          <PaginationItem>
-            <PaginationNext
-              href="#"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  if (currentPage === totalPages) {
+                    e.preventDefault(); // Prevent action if already on the last page
+                  } else {
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+                  }
+                }}
+                className={
+                  currentPage === totalPages
+                    ? "cursor-not-allowed opacity-50"
+                    : ""
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 };

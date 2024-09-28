@@ -1,15 +1,29 @@
 import { Anime } from "@/types/types";
 import { Badge } from "./ui/badge";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   anime: Anime; // Expect a single Anime object
 };
 
 const AnimeCard = ({ anime }: Props) => {
-  console.log({ anime });
+  const navigate = useNavigate();
+
+  type HandleType = {
+    id: string | number;
+  };
+
+  const handleNavigation = ({ id }: HandleType) => {
+    navigate(`/${id}`);
+  };
 
   return (
-    <div className="flex flex-col relative w-full cursor-pointer transform transition hover:scale-105 ease-out duration-300">
+    <div
+      className="flex flex-col relative w-full cursor-pointer transform transition hover:scale-105 ease-out duration-300"
+      onClick={() => {
+        handleNavigation({ id: anime._id }); // Pass an object with animeName
+      }}
+    >
       <img
         src={anime.image}
         alt={anime.title}
